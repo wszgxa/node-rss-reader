@@ -1,6 +1,6 @@
 import mg from './db.js'
 let sourceKindScheme = mg.Schema({
-  kind: String
+  kind: { type: [String], index: true }
 })
 
 let sourceScheme = mg.Schema({

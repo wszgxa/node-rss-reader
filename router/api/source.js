@@ -1,8 +1,8 @@
 import Router from 'koa-router'
-import { Source, SourceKind } from '../model/source.js'
-import { resMsg } from '../helper.js'
+import { Source, SourceKind } from '../../model/source.js'
+import { resMsg } from '../../helper.js'
 const router = Router()
-router.prefix('/source')
+router.prefix('/api/v1/source')
 
 router.post('/add/kind', async (ctx, next) => {
   let data = ctx.request.body
