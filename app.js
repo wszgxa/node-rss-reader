@@ -13,13 +13,19 @@ import indexView from './router/index'
 import router from 'koa-router'
 import { resMsg, koaErr } from './helper.js'
 const app = new Koa()
+app.use(koaNunjucks({
+  ext: 'html',
+  path: path.join(__dirname, 'views'),
+  nunjucksConfig: {
+    autoescape: true,
+    watch: true
+  }
+}));
 // 错误处理
 app.use(async (ctx, next) => {
   try {
     await next()
   } catch (err) {
-    ctx.body = resMsg(false, err.message)
-    ctx.status = err.status || 500
     console.log(err)
   }
 })
@@ -31,18 +37,7 @@ app.use(async (ctx, next) => {
   }
 })
 
-app.use(koaNunjucks({
-  ext: 'html',
-  path: path.join(__dirname, 'views'),
-  nunjucksConfig: {
-    autoescape: true,
-    watch: true
-  }
-}));
-
-
 app.use(bodyParser())
-
 app.use(logger())
 app.use(json())
 app.use(source.routes())

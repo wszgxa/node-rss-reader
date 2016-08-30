@@ -1,5 +1,6 @@
 import Router from 'koa-router'
 import { rssParseUrl } from '../lib/rss-parser'
+import { Source, SourceDetail } from '../model/source'
 const rssUrl = 'http://hiluluke.cn/atom.xml'
 const router = Router()
 
@@ -17,6 +18,13 @@ router.get('/', async (ctx, next) => {
   })
   next()
 })
+
+router.get('/500', async (ctx, next) => {
+  ctx.render('500', { title: '未知错误' })
+  next()
+})
+
+
 router.get('/add-url', async (ctx, next) => {
   await ctx.render('add_url', {
     title: '添加订阅URL'
@@ -28,7 +36,6 @@ router.post('/add-url', async (ctx, next) => {
   let rssData = await rssParseUrl(data.url)
     .then((res) => { return res })
     .catch((err) => { return 'fail' })
-
   if (rssData === 'fail') {
     ctx.render('add_url', {
       title: '添加订阅URl',
@@ -41,14 +48,34 @@ router.post('/add-url', async (ctx, next) => {
       link: rssData.feed.link,
       feedUrl: rssData.feed.feedUrl
     }
-    ctx.render('add_url', {
-      title: '添加订阅URL',
-      statuCode: 1,
-      status: '成功',
-      rssInfo: rssInfo
-    })
+    let source = new Source(rssInfo)
+    await source.save()
+      .then((res) => {
+        console.log(res)
+        console.log('lala')
+        ctx.render('add_url', {
+          title: '添加订阅URL',
+          statuCode: 1,
+          status: '成功',
+          rssInfo: rssInfo
+        })
+        // 后置存储数据
+        SourceDetail.saveDetails(rssData)
+      })
+      .catch((err) => {
+        let stMsg = '失败'
+        if(err.code == 11000) {
+          stMsg = '已经存在该url,请勿重复加载'
+        }
+        console.log(err)
+        ctx.render('add_url', {
+          title: '添加订阅URl',
+          statuCode: 0,
+          status: '失败'
+        })
+      })
   }
   next()
-
 })
+
 module.exports = router
