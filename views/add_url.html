@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div>
+  <form action="/add-url" method="post">
+    <span>添加订阅url</span>
+    <input type="text" name="url" value="url">
+    <input type="submit" value="确定">
+  </form>
+  {% if status %}
+  <div>
+    {{ status }}
+  </div>
+    {% if rssInfo %}
+    <ul>
+      <li>{{ rssInfo.title }}</li>
+      <li>{{ rssInfo.link }}</li>
+      <li>{{ rssInfo.feedUrl }}</li>
+    </ul>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

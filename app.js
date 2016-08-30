@@ -2,7 +2,7 @@ import Koa from 'koa'
 import path from 'path'
 import logger from 'koa-logger'
 import json from 'koa-json'
-import koaBody from 'koa-body'
+import bodyParser from 'koa-bodyparser'
 import co from 'co'
 import convert from 'koa-convert'
 import koaNunjucks from 'koa-nunjucks-2'
@@ -41,7 +41,7 @@ app.use(koaNunjucks({
 }));
 
 
-app.use(convert(koaBody()))
+app.use(bodyParser())
 
 app.use(logger())
 app.use(json())
