@@ -3,10 +3,9 @@ import path from 'path'
 import logger from 'koa-logger'
 import json from 'koa-json'
 import koaBody from 'koa-body'
-import convert from 'koa-convert'
-// import views from 'koa-views'
-import render from 'koa-ejs'
 import co from 'co'
+import convert from 'koa-convert'
+import koaNunjucks from 'koa-nunjucks-2'
 // router
 import source from './router/api/source'
 import indexView from './router/index'
@@ -14,8 +13,6 @@ import indexView from './router/index'
 import router from 'koa-router'
 import { resMsg, koaErr } from './helper.js'
 const app = new Koa()
-
-
 // 错误处理
 app.use(async (ctx, next) => {
   try {
@@ -26,27 +23,23 @@ app.use(async (ctx, next) => {
     console.log(err)
   }
 })
-// 
+// 接口错误处理
 app.use(async (ctx, next) => {
   await next()
   if(ctx.err != undefined ) {
     ctx.body = resMsg(false, ctx.err)
   }
 })
-// app.use(views(__dirname + '/views', {
-//   extension: 'hbs',
-//   map: {
-//     hbs: 'handlebars'
-//   }
-// }))
-render(app, {
-  root: path.join(__dirname, 'views'),
-  layout: 'layout',
-  viewExt: 'html',
-  cache: false,
-  debug: true
-})
-app.context.render = co.wrap(app.context.render);
+
+app.use(koaNunjucks({
+  ext: 'html',
+  path: path.join(__dirname, 'views'),
+  nunjucksConfig: {
+    autoescape: true,
+    watch: true
+  }
+}));
+
 
 app.use(convert(koaBody()))
 

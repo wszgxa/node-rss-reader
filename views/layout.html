@@ -1,11 +1,13 @@
 <html>
   <head>
-  <meta charset="utf-8">
-  <title><%= title %></title>
+  {% block head %}
+  {% include '_partial/head.html' %}
+  {% endblock %}
   </head>
   <body>
     <div>
-      <%- body %>
+      {% block body %}
+      {% endblock %}
     </div>
   </body>
 </html>

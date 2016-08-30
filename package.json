@@ -1,7 +1,7 @@
 {
-  "name": "spiderweibo",
+  "name": "node-rss-reader",
   "version": "1.0.0",
-  "description": "spider weibo",
+  "description": "rss reader",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon run.js"
@@ -15,17 +15,17 @@
     "babel-register": "^6.9.0",
     "babel-runtime": "^6.9.2",
     "co": "^4.6.0",
-    "handlebars": "^4.0.5",
     "koa": "^2.0.0",
     "koa-body": "^1.4.0",
     "koa-bodyparser": "^3.1.0",
     "koa-convert": "^1.2.0",
-    "koa-ejs": "^3.0.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^2.0.0",
+    "koa-nunjucks-2": "^3.0.0-alpha.4",
     "koa-router": "^7.0.1",
     "koa-views": "^5.0.2",
-    "mongoose": "^4.5.4"
+    "mongoose": "^4.5.4",
+    "rss-parser": "^2.5.1"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
