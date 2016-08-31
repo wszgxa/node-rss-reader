@@ -1,35 +1,37 @@
-import mg from './db.js'
+import db from './db.js'
 
-let sourceScheme = mg.Schema({
+let sourceScheme = db.Schema({
   title: String,
   link: String,
-  feedUrl: {type: String, unique: true}
+  feedUrl: {type: String, unique: true},
+  update: {type: Date, default: Date.now}
 })
-let sourceDetailScheme = mg.Schema({
+let sourceDetailScheme = db.Schema({
   source: String,
   title: String,
   link: String,
   pubDate: Date,
   content: String,
-  contentSnippet: String
+  contentSnippet: String,
+  readed: {type:Boolean, default: false},
+  star: {type: Boolean, default: false}
 })
-sourceDetailScheme.static('saveDetails', function(data, cb){
+sourceDetailScheme.statics.saveDetails = function(data, cb){
   const source = data.feed.link
   let details = data.feed.entries.map(function (obj) {
     return Object.assign(obj, {
       source: source
     })
   })
-  console.log(details)
-  return this.model('SourceDetail').collection.insert(details, function(err, res){
-    if (err) {
-      console.log(err)
-    } else {
-      console.log('success')
-    }
+  let saveData = new Promise((resolve, reject) => {
+    this.model('SourceDetail').collection.insert(details, function(err, res){
+      err ? reject(err) : resolve(res)
+    })
   })
-})
-let SourceDetail = mg.model('SourceDetail', sourceDetailScheme)
-let Source = mg.model('Source', sourceScheme)
+  return saveData
+}
+
+let SourceDetail = db.model('SourceDetail', sourceDetailScheme)
+let Source = db.model('Source', sourceScheme)
 
 export {SourceDetail, Source}

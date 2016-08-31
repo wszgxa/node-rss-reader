@@ -11,7 +11,7 @@ router.get('/', async (ctx, next) => {
   let rssRes = await rssParse.parseURL(rssUrl, function(err, parsed) {
     console.log(parsed);
     return parsed
-  }) 
+  })
   await ctx.render('index', {
     name: userName,
     title: '主页'
@@ -21,7 +21,6 @@ router.get('/', async (ctx, next) => {
 
 router.get('/500', async (ctx, next) => {
   ctx.render('500', { title: '未知错误' })
-  next()
 })
 
 
@@ -51,8 +50,6 @@ router.post('/add-url', async (ctx, next) => {
     let source = new Source(rssInfo)
     await source.save()
       .then((res) => {
-        console.log(res)
-        console.log('lala')
         ctx.render('add_url', {
           title: '添加订阅URL',
           statuCode: 1,
@@ -60,7 +57,11 @@ router.post('/add-url', async (ctx, next) => {
           rssInfo: rssInfo
         })
         // 后置存储数据
-        SourceDetail.saveDetails(rssData)
+        SourceDetail.saveDetails(rssData).then((res) => {
+          console.log('success')
+        }).catch((err) => {
+          console.log(err)
+        })
       })
       .catch((err) => {
         let stMsg = '失败'
