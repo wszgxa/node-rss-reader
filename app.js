@@ -36,10 +36,11 @@ app.use(async (ctx, next) => {
     ctx.body = resMsg(false, ctx.err)
   }
 })
-
 app.use(bodyParser())
 app.use(logger())
 app.use(json())
+app.use(require('koa-static')(path.resolve(__dirname + 'statics'), {
+  }))
 app.use(source.routes())
 app.use(indexView.routes())
 
