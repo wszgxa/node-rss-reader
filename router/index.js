@@ -9,7 +9,6 @@ router.prefix('/')
 router.get('/', async (ctx, next) => {
   let userName = 'hehe'
   await ctx.render('index', {
-    name: userName,
     title: '主页'
   })
   next()

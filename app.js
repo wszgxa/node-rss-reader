@@ -39,8 +39,8 @@ app.use(async (ctx, next) => {
 app.use(bodyParser())
 app.use(logger())
 app.use(json())
-app.use(require('koa-static')(path.resolve(__dirname + 'statics'), {
-  }))
+// app.use(require('koa-static')(path.resolve(__dirname + 'statics')))
+app.use(require('koa-static')('./statics'))
 app.use(source.routes())
 app.use(indexView.routes())
 

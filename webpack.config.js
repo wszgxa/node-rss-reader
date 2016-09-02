@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var glob = require('glob');
 var path = require('path');
 
+var UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 var entry = (function () {
   var entry = {}
   glob.sync('statics/src/vue/**/*.js').forEach(function (tagName) {
@@ -11,7 +12,6 @@ var entry = (function () {
   })
   return entry
 })()
-console.log(entry)
 module.exports = {
   entry: entry,
   output: {
@@ -20,33 +20,30 @@ module.exports = {
     filename: '[name].js'
   },
   module: {
-    loader: [
+    resolve: {
+      extensions: ['', '.js', '.styl', '.vue']
+    },
+    loaders: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
         loader: 'babel',
+        exclude: /(node_modules|bower_components)/,
         query: {
-          'presets': ['es2015'],
-          'plugins': [
-            ['transform-es2015-for-of', {
-              'loose': true
-            }],
-            'transform-object-assign'
-          ]
+          presets: ['es2015']
         }
       },
       {
         test: /\.vue$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|bower_components)/,        
         loader: 'vue'
       },
       {
         test: /\.css$/,
         loader: 'style-loader!css-loader'
       },
-      {
-        test: /\.less$/,
-        loader: 'style!css!less'
+      { 
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!stylus-loader' 
       },
       {
         test: /\.(png|jp?eg|gif|svg|woff2?|eot|ttf)(\?.*)?$/,
@@ -60,12 +57,9 @@ module.exports = {
   },
   devtool: 'source-map',
   vue: {
-    loaders: {
-      css: 'style!css!autoprefixer!less',
-    },
     autoprefixer: {
       browsers: ['last 40 versions']
-    }
+    },
   },
   babel: {
     presets: ['es2015', 'stage-1'],
