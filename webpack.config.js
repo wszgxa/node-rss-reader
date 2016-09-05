@@ -2,7 +2,8 @@ var webpack = require('webpack');
 var glob = require('glob');
 var path = require('path');
 
-var UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
+var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+
 var entry = (function () {
   var entry = {}
   glob.sync('statics/src/vue/**/*.js').forEach(function (tagName) {
@@ -12,6 +13,14 @@ var entry = (function () {
   })
   return entry
 })()
+var commonArray = (function (en) {
+  var commonArr = [];
+  for (var props in en) {
+    commonArr.push(props);
+  }
+  return commonArr;
+})(entry)
+
 module.exports = {
   entry: entry,
   output: {
@@ -56,7 +65,13 @@ module.exports = {
     ],
   },
   devtool: 'source-map',
+  plugins: [
+    new CommonsChunkPlugin('./statics/dist/js/common.bundle.js', commonArray)
+  ],
   vue: {
+    loaders: {
+      css: 'style!css!autoprefixer!stylus',
+    },
     autoprefixer: {
       browsers: ['last 40 versions']
     },

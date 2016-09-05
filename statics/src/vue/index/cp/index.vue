@@ -1,7 +1,7 @@
 <style lang="stylus" src='../styl/index.styl'></style>
 <template>
   <div>
-    hehe
+    heheha
   </div>
 </template>
 
